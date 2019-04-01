@@ -6,6 +6,9 @@
 
 #include <GameState.h>
 #include <GlobalResources.h>
+#include <Simulation.h>
+#include <Spaceship.h>
+#include <Surface.h>
 
 namespace ExomoMarsLander
 {
@@ -33,6 +36,10 @@ namespace ExomoMarsLander
 
         /* Zeitpunkt (vergangene Zeit seit Spielstart), an dem die Schlange das letzte mal einen Schritt bewegt wurde. */
         sf::Time lastMoveTime = sf::Time::Zero;
+
+        Spaceship ship;
+        Surface surface;
+        SpaceSimulation sim;
 
         /* Resourcen für Grafik und Text */
         const sf::Font& textFont;

@@ -26,7 +26,7 @@ GameActive::~GameActive()
 
 void GameActive::InitializeLevel()
 {
-    // TODO: generate a level ;)
+    sim.Initialize();
 }
 
 void GameActive::handleEvent(const sf::Event& event)
@@ -48,13 +48,6 @@ void GameActive::handleEvent(const sf::Event& event)
             pauseRequested = true;
         }
 
-        /*
-         * Richtungstasten ändern die Bewegungsrichtung der Schlange für die nächste Bewegung.
-         * Solange bis die Schlange sich tatsächlich bewegt hat kann die
-         * Bewegungsrichtung immer wieder überschrieben werden, um eventuelle
-         * falsche Eingaben zu korrigieren. Nur Bewegungen die nicht entgegengesetzt zur letzten Bewegung sind
-         * sind zugelassen.
-         */
         if((event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::A))
         {
             // move ship to the left
@@ -66,10 +59,20 @@ void GameActive::handleEvent(const sf::Event& event)
         if((event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::W))
         {
             // move ship up
+            sim.EnableThrust(true);
+            ship.enableFlame(true);
         }
         if((event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::S))
         {
             // move ship down (maybe not possible)
+        }
+        break;
+
+    case sf::Event::KeyReleased:
+        if((event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::W))
+        {
+            sim.EnableThrust(false);
+            ship.enableFlame(false);
         }
         break;
 
@@ -110,7 +113,12 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
     }
 
     // TODO: move the space ship
-    
+    auto elapsedSinceMove = (elapsed - lastMoveTime).asMilliseconds();
+    sim.SimulationStep(elapsedSinceMove);
+
+    lastMoveTime = elapsed;
+
+    ship.setPosition(400 + sim.GetShipX() / 10000, 530 - sim.GetShipY() / 10000);
 
     return nullptr;
 }
@@ -118,6 +126,9 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
 void GameActive::render(sf::RenderWindow& window)
 {
     window.clear(sf::Color(25,50,0, 255));
+
+    surface.drawTo(window);
+    ship.drawTo(window);
 
     sf::Text scoreText;
 
