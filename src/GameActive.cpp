@@ -48,13 +48,16 @@ void GameActive::handleEvent(const sf::Event& event)
             pauseRequested = true;
         }
 
+        //TODO: Bewegunstasten sinnvoller auswerten.
         if((event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::A))
         {
-            // move ship to the left
+            // Schiff gegen den Uhrzeigersinn drehen
+            sim.Rotate(SpaceSimulation::Rotation::CounterClockwise);
         }
         if((event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::D))
         {
             // move ship to the right
+            sim.Rotate(SpaceSimulation::Rotation::Clockwise);
         }
         if((event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::W))
         {
@@ -73,6 +76,16 @@ void GameActive::handleEvent(const sf::Event& event)
         {
             sim.EnableThrust(false);
             ship.enableFlame(false);
+        }
+        if((event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::A))
+        {
+            // Schiff nicht mehr drehen
+            sim.Rotate(SpaceSimulation::Rotation::None);
+        }
+        if((event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::D))
+        {
+            // Schiff nicht mehr drehen
+            sim.Rotate(SpaceSimulation::Rotation::None);
         }
         break;
 
@@ -93,17 +106,6 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
         return std::make_shared<GamePaused>(currentState);
     }
 
-    /* Wenn ein Level beendet wurde, wird sofort in den LevelClear-Bildschirm gewechselt,
-     * ohne weitere Bewegungen zu berechnen. */
-    if(completedRequested)
-    {
-        completedRequested = false;
-        levelCompleted = true;
-
-        // TODO: Replace with real state for winning
-        return std::make_shared<GamePaused>(currentState);
-    }
-
     /* Wenn das Spiel pausiert war (hier kommt man erst hin wenn der Pausenmodus verlassen wurde), wird die Zeitmessung
      * bis zur nächsten Bewegung neu gestartet. */
     if(paused)
@@ -112,13 +114,26 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
         lastMoveTime = elapsed;
     }
 
-    // TODO: move the space ship
     auto elapsedSinceMove = (elapsed - lastMoveTime).asMilliseconds();
     sim.SimulationStep(elapsedSinceMove);
 
     lastMoveTime = elapsed;
 
-    ship.setPosition(400 + sim.GetShipX() / 10000, 530 - sim.GetShipY() / 10000);
+    auto shipState = sim.GetShipState();
+
+    if(shipState.hasLanded)
+    {
+        return std::make_shared<GameOver>(1);
+    }
+
+    if(!shipState.isAlive)
+    {
+        return std::make_shared<GameOver>(0);
+    }
+
+    // Simulationskoordinaten in Anzeigekoordinaten umrechnen
+    ship.setPosition(400 + shipState.horizontalPosition / 10000, 530 - shipState.altitude / 10000);
+    ship.setRotation(shipState.rotation * 57);
 
     return nullptr;
 }
@@ -137,7 +152,7 @@ void GameActive::render(sf::RenderWindow& window)
     text << L"Völlig losgelöst von der Erde";
     scoreText.setString(text.str());
     scoreText.setCharacterSize(24);
-    scoreText.setColor(sf::Color::Blue);
+    scoreText.setFillColor(sf::Color::Blue);
     scoreText.setPosition(15, 5);
     window.draw(scoreText);
 }

@@ -2,7 +2,7 @@
 cmake_policy(SET CMP0074 NEW)
 project(ExomoMarsLander)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 find_package(SFML 2.1 COMPONENTS audio graphics window system REQUIRED)
 
 SET(CMAKE_CXX_FLAGS "-std=c++11")

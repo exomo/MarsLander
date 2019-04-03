@@ -61,7 +61,7 @@ void GameMainMenu::render(sf::RenderWindow& window)
 
     sf::Text menuText;
     menuText.setFont(textFont);
-    menuText.setColor(sf::Color::Blue);
+    menuText.setFillColor(sf::Color::Blue);
     menuText.setString(L"Exomo Mars Lander");
     menuText.setCharacterSize(50);
     menuText.setPosition(50, 20);

@@ -46,10 +46,7 @@ namespace ExomoMarsLander
 
         bool pauseRequested = false;
         bool paused = true;
-
-        bool completedRequested = false;
-        bool levelCompleted = false;
-
+        
         int score = 0;
         int levelScore = 0;
     };

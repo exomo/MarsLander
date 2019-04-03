@@ -63,13 +63,22 @@ void GameOver::render(sf::RenderWindow& window)
     sf::Text menuText;
 
     std::wostringstream gameOverText;
-    gameOverText << L"Spiel vorbei\n"
-                 << L"Deine Punktzahl: " << score << "\n";
+    if(score > 0)
+    {
+        gameOverText << L"Spiel vorbei\n"
+                     << L"Sicher gelandet \n";
+    } 
+    else
+    {
+        gameOverText << L"Spiel vorbei\n"
+                     << L"Abgestürzt \n";
+    }
+    
 
     menuText.setFont(textFont);
     menuText.setString(gameOverText.str());
     menuText.setCharacterSize(50);
-    menuText.setColor(sf::Color::Blue);
+    menuText.setFillColor(sf::Color::Blue);
     menuText.setPosition(50, 20);
     window.draw(menuText);
 

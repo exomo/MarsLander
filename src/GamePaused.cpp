@@ -65,7 +65,7 @@ void GamePaused::render(sf::RenderWindow& window)
     sf::Text menuText;
 
     menuText.setFont(textFont);
-    menuText.setColor(sf::Color::Cyan);
+    menuText.setFillColor(sf::Color::Cyan);
     menuText.setString(L"Spiel angehalten");
     menuText.setCharacterSize(50);
     menuText.setPosition(70, 70);
