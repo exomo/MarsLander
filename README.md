@@ -1,11 +1,11 @@
 ﻿# MarsLander #
 
 ## Was ist das? ##
-Ein kleines Spiel für einen Programmierwettbewerb im NGB.
-[Zum Thread](https://ngb.to/threads/40532-Aufgabenstellung-Programmierwettbewerb-Nr-4)
+Ein kleines Spiel bei dem ein Raumschiff auf dem Mars (es muss ja nicht immer der Mond sein) gelandet werden muss.
 
 ## Wie starte ich das Spiel? ##
-Noch gar nicht
+* Windows 64bit: [Download](https://github.com/exomo/MarsLander/releases/latest), 7z Archiv auspacken (mit 7zip oder anderem Packer der das Format unterstützt), marslander.exe ausführen
+* Linux: Im Moment kein Binary Release, kommt eventuell später
 
 ## Wie Spiele ich das Spiel ##
 Auch noch nicht
