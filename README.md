@@ -8,7 +8,13 @@ Ein kleines Spiel bei dem ein Raumschiff auf dem Mars (es muss ja nicht immer de
 * Linux: Im Moment kein Binary Release, kommt eventuell später
 
 ## Wie Spiele ich das Spiel ##
-Auch noch nicht
+WA(S)D oder Pfeiltasten:
+
+Hoch / W - Raumschiff beschleunigen
+Links / A - Raumschiff gegen den Uhrzeigersinn drehen
+Rechts / D - Raumschiff im Uhrzeigersinn drehen
+
+Versuche das Raumschiff langsam auf dem Boden zu landen.
 
 ## Wie kann ich das Spiel selbst bauen? ##
 Auf jeden Fall muss das Git Repository irgendwo hin geklont werden oder über den "DOWNLOAD ZIP" Button heruntergeladen und irgendwo hin entpackt werden. Das geklonte oder entpackte Verzeichnis wird ab jetzt das Source Code Verzeichnis genannt.

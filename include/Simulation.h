@@ -1,6 +1,12 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
+#include <ShipCollisionModel.h>
+#include <SurfaceObject.h>
+
+#include <memory>
+#include <vector>
+
 /** 
  * The main game logic is within the simulation of the space ship
  *  
@@ -60,19 +66,26 @@ namespace ExomoMarsLander
 
             /** Mache einen Schritt in der Simulation 
              *
-             *  Ein Zeitschritt berechnet die Bewegung alle Objekte in der vergangenen Zeit
+             *  Ein Zeitschritt berechnet die Bewegung aller Objekte in der vergangenen Zeit
              * */
             void SimulationStep(double elapsedMilliseconds);
 
             /** Gibt die Position des Raumschiffs zurück
              * */
             ShipState GetShipState();
+
+            /** Gibt die Landschaftsbeschreibung zurück
+             * */
+            const std::vector<std::unique_ptr<SurfaceObject>>& GetSurface();
             
+            /** Gibt das Kollisionsmodell der Raumschiffs zurück
+             * */
+            const ShipCollisionModel& GetShipCollisionModel();
 
         private:
             /* Einige Konstanten für die Simulation */
             const double gravity = 1.81; // gravity constant
-            const double thrust  = 7;   // thrust constant
+            const double thrust  = 3;   // thrust constant
             //const double airResistance = 0.0000001; // air resistance constant
             const double airResistance = 0; // air resistance constant
 
@@ -99,6 +112,11 @@ namespace ExomoMarsLander
             bool hasCrashed = false;
             bool hasLanded = false;
 
+            /** Landschaft,  */
+            std::vector<std::unique_ptr<SurfaceObject>> planetSurface;
+
+            ShipCollisionModel shipCollisionModel;
+
             /* Eingaben aus dem Spiel */
 
             /** Triebwerk ist an */
@@ -106,6 +124,15 @@ namespace ExomoMarsLander
 
             /** Aktuelle Drehvorgabe */
             Rotation rotationMode;
+
+            /** Position des Raumschiffs aktualisieren (Physik)  * */
+            void updateShip(double elapsedTime);
+
+            /** Kollisionserkennung für Raumschiff und Welt */
+            bool hasCollision();
+
+            /** Generiert eine zufällige Landschaft */
+            void generateSurface();
     };
 }
 

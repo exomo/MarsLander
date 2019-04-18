@@ -5,7 +5,7 @@ project(ExomoMarsLander)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 find_package(SFML 2.1 COMPONENTS audio graphics window system REQUIRED)
 
-SET(CMAKE_CXX_FLAGS "-std=c++11")
+SET(CMAKE_CXX_FLAGS "-std=c++14")
 if(WIN32 AND "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwindows")
 endif()

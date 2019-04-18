@@ -27,6 +27,17 @@ GameActive::~GameActive()
 void GameActive::InitializeLevel()
 {
     sim.Initialize();
+
+    // TODO: Parameter sind im Moment fest, sollten von außen kommen
+    transformation = CoordinateTransformation(800, 600, 4000000, 3000000);
+
+    // Initialisiere Raumschiff und Landschaft
+    surface.Initialize(sim.GetSurface(), transformation);
+    ship.initialize(sim.GetShipCollisionModel(), transformation);
+
+    // Zeige Kollisionsmodelle an, nur für debugging
+    ship.showCollisionModel(true);
+    surface.showCollisionModel(true);
 }
 
 void GameActive::handleEvent(const sf::Event& event)
@@ -132,8 +143,8 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
     }
 
     // Simulationskoordinaten in Anzeigekoordinaten umrechnen
-    ship.setPosition(400 + shipState.horizontalPosition / 10000, 530 - shipState.altitude / 10000);
-    ship.setRotation(shipState.rotation * 57);
+    ship.setPosition(transformation.ToDisplayX(shipState.horizontalPosition), transformation.ToDisplayY(shipState.altitude));
+    ship.setRotation(transformation.ToDisplayAngle(shipState.rotation));
 
     return nullptr;
 }

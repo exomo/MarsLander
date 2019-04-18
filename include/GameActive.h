@@ -1,14 +1,15 @@
 #ifndef GAMEACTIVE_H
 #define GAMEACTIVE_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-
+#include <CoordinateTransformation.h>
 #include <GameState.h>
 #include <GlobalResources.h>
 #include <Simulation.h>
 #include <Spaceship.h>
 #include <Surface.h>
+
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 namespace ExomoMarsLander
 {
@@ -40,6 +41,7 @@ namespace ExomoMarsLander
         Spaceship ship;
         Surface surface;
         SpaceSimulation sim;
+        CoordinateTransformation transformation;
 
         /* Resourcen für Grafik und Text */
         const sf::Font& textFont;
