@@ -1,8 +1,8 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
-#include <ShipCollisionModel.h>
-#include <SurfaceObject.h>
+#include <simulation/ShipCollisionModel.h>
+#include <simulation/SurfaceObject.h>
 
 #include <memory>
 #include <vector>

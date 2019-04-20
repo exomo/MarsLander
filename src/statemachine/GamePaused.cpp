@@ -1,7 +1,7 @@
-#include <GameState.h>
-#include <GameActive.h>
-#include <GameMainMenu.h>
-#include <GamePaused.h>
+#include <statemachine/GameState.h>
+#include <statemachine/GameActive.h>
+#include <statemachine/GameMainMenu.h>
+#include <statemachine/GamePaused.h>
 #include <GlobalResources.h>
 
 #include <iostream>

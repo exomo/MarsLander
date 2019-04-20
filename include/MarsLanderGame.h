@@ -2,7 +2,7 @@
 #define MarsLanderGame_H
 
 #include <SFML/Graphics.hpp>
-#include <GameState.h>
+#include <statemachine/GameState.h>
 
 namespace ExomoMarsLander
 {

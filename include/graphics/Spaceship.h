@@ -1,8 +1,8 @@
 #ifndef SPACESHIP_H
 #define SPACESHIP_H
 
-#include <CoordinateTransformation.h>
-#include <ShipCollisionModel.h>
+#include <graphics/CoordinateTransformation.h>
+#include <simulation/ShipCollisionModel.h>
 
 #include <SFML/Graphics.hpp>
 

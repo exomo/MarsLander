@@ -1,8 +1,8 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#include <CoordinateTransformation.h>
-#include <SurfaceObject.h>
+#include <graphics/CoordinateTransformation.h>
+#include <simulation/SurfaceObject.h>
 
 #include <SFML/Graphics.hpp>
 

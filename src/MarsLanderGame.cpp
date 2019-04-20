@@ -1,6 +1,6 @@
 ﻿#include <MarsLanderGame.h>
-#include <GameActive.h>
-#include <GameMainMenu.h>
+#include <statemachine/GameActive.h>
+#include <statemachine/GameMainMenu.h>
 #include <GlobalResources.h>
 
 #include <iostream>

@@ -1,7 +1,7 @@
-﻿#include "GameMainMenu.h"
-#include "GameState.h"
-#include "GameActive.h"
-#include "GlobalResources.h"
+﻿#include <statemachine/GameMainMenu.h>
+#include <statemachine/GameState.h>
+#include <statemachine/GameActive.h>
+#include <GlobalResources.h>
 
 #include <iostream>
 #include <SFML/Graphics.hpp>

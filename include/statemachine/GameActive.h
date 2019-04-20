@@ -1,12 +1,12 @@
 #ifndef GAMEACTIVE_H
 #define GAMEACTIVE_H
 
-#include <CoordinateTransformation.h>
-#include <GameState.h>
+#include <graphics/CoordinateTransformation.h>
+#include <statemachine/GameState.h>
 #include <GlobalResources.h>
-#include <Simulation.h>
-#include <Spaceship.h>
-#include <Surface.h>
+#include <simulation/Simulation.h>
+#include <graphics/Spaceship.h>
+#include <graphics/Surface.h>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>

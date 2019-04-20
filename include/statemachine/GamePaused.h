@@ -1,7 +1,7 @@
 #ifndef GAMEPAUSED_H
 #define GAMEPAUSED_H
 
-#include <GameState.h>
+#include <statemachine/GameState.h>
 
 namespace ExomoMarsLander
 {

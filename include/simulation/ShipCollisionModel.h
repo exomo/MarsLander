@@ -1,7 +1,7 @@
 #ifndef SHIPCOLLISIONMODEL_H
 #define SHIPCOLLISIONMODEL_H
 
-#include <SurfaceObject.h>
+#include <simulation/SurfaceObject.h>
 
 #include <SFML/Graphics.hpp>
 

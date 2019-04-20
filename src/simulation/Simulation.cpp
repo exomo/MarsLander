@@ -1,4 +1,4 @@
-#include <Simulation.h>
+#include <simulation/Simulation.h>
 
 #include <cmath>
 #include <memory>
@@ -101,16 +101,34 @@ bool SpaceSimulation::hasCollision()
 {
     // TODO: implement real collision detection with generated surface
 
-    // auto boundingRext = shipCollisionModel.getBoundingRect();
+    // auto boundingRect = shipCollisionModel.getBoundingRect();
+    auto boundingRect = sf::FloatRect(-100000, 100000, 100000, 100000);
     // shipCollisionModel.collidesWith()
 
-    // for(const auto& surfaceObject : planetSurface)
-    // {
-    //     if(shipCollisionModel.collidesWith(*surfaceObject, posX, posY, rotation))
-    //     {
-    //         return true;
-    //     }
-    // }
+    // suche Kollisionsobjekte die in Frage kommen
+    std::vector<const SurfaceObject*> objectsInRange;
+
+    for(auto& surfaceObject : planetSurface)
+    {
+        if(surfaceObject->rightSide > boundingRect.left 
+            && surfaceObject->leftSide < (boundingRect.left + boundingRect.width))
+        {
+            objectsInRange.push_back(surfaceObject.get());
+            surfaceObject->isInCollisionRange = true;
+        }
+        else
+        {
+            surfaceObject->isInCollisionRange = false;
+        }
+    }
+
+    for(const auto* surfaceObject : objectsInRange)
+    {
+        if(shipCollisionModel.collidesWith(*surfaceObject, posX, posY, rotation))
+        {
+            // return true;
+        }
+    }
 
     if(posY < 0)
     {

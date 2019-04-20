@@ -1,11 +1,11 @@
-﻿#include <GameActive.h>
+﻿#include <statemachine/GameActive.h>
 
 #include <iostream>
 #include <sstream>
 #include <string>
 
-#include <GamePaused.h>
-#include <GameOver.h>
+#include <statemachine/GamePaused.h>
+#include <statemachine/GameOver.h>
 
 using namespace ExomoMarsLander;
 

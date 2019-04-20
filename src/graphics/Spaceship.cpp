@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include <Spaceship.h>
+#include <graphics/Spaceship.h>
 
 using namespace ExomoMarsLander;
 

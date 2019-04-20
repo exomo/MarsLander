@@ -1,5 +1,5 @@
-#include <ShipCollisionModel.h>
-#include <SurfaceObject.h>
+#include <simulation/ShipCollisionModel.h>
+#include <simulation/SurfaceObject.h>
 
 #include <memory>
 
@@ -22,11 +22,7 @@ bool ShipCollisionModel::collidesWith(const SurfaceObject& surfaceObject, double
 {
     for(const auto& rect : collisionRects)
     {
-        auto transformed = sf::Transform().rotate(45).transformRect(rect);
-        if(transformed.intersects(surfaceObject.getCollisionRect() ))
-        {
-            return true;
-        }
+        
     }
     
     return false;

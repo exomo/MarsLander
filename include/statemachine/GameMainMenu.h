@@ -1,7 +1,7 @@
 #ifndef GAMEMAINMENU_H
 #define GAMEMAINMENU_H
 
-#include <GameState.h>
+#include <statemachine/GameState.h>
 
 namespace ExomoMarsLander
 {

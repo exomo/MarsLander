@@ -1,4 +1,4 @@
-#include <SurfaceObject.h>
+#include <simulation/SurfaceObject.h>
 
 using namespace ExomoMarsLander;
 
@@ -23,12 +23,12 @@ std::unique_ptr<sf::Shape> SurfaceSlope::getDisplayShape(CoordinateTransformatio
     return shape;
 }
 
-sf::FloatRect SurfaceFlat::getCollisionRect() const
+bool SurfaceFlat::collidesWith(sf::FloatRect& rect) const 
 {
-    return sf::FloatRect(leftSide, altitude, rightSide - leftSide, 100000);
+    return false;
 }
 
-sf::FloatRect SurfaceSlope::getCollisionRect() const
+bool SurfaceSlope::collidesWith(sf::FloatRect& rect) const 
 {
-    return sf::FloatRect(leftSide, std::max(leftAltitude, rightAltitude), rightSide - leftSide, 100000);
+    return false;
 }
