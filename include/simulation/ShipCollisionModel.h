@@ -14,12 +14,12 @@ namespace ExomoMarsLander
     {
         public:
             ShipCollisionModel();
-            bool collidesWith(const SurfaceObject& surfaceObject, double posX, double posY, double rot) const;
 
+            sf::FloatRect getBoundingRect(float posX, float posY, float rot) const;
             std::vector<std::unique_ptr<sf::Shape>> getDisplayShapes(CoordinateTransformation transformation) const;
 
         private:
-            std::vector<sf::FloatRect> collisionRects;
+            std::vector<std::unique_ptr<sf::Shape>> collisionShapes;
     };
 
 }

@@ -51,6 +51,8 @@ namespace ExomoMarsLander
         
         int score = 0;
         int levelScore = 0;
+
+        bool showCollisionModel;
     };
 
 }

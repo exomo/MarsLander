@@ -24,7 +24,6 @@ namespace ExomoMarsLander
         bool isInCollisionRange;
 
         virtual std::unique_ptr<sf::Shape> getDisplayShape(CoordinateTransformation transformation) const = 0;
-        virtual bool collidesWith(sf::FloatRect& rect) const = 0;
     };
 
     struct SurfaceFlat : public SurfaceObject
@@ -32,7 +31,6 @@ namespace ExomoMarsLander
         double altitude;
 
         std::unique_ptr<sf::Shape> getDisplayShape(CoordinateTransformation transformation) const override;
-        bool collidesWith(sf::FloatRect& rect) const override;
     };
 
     struct SurfaceSlope : public SurfaceObject
@@ -43,7 +41,6 @@ namespace ExomoMarsLander
         double centerOffset;
 
         std::unique_ptr<sf::Shape> getDisplayShape(CoordinateTransformation transformation) const override;
-        bool collidesWith(sf::FloatRect& rect) const override;
     };
 }
 

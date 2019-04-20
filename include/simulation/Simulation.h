@@ -76,11 +76,9 @@ namespace ExomoMarsLander
 
             /** Gibt die Landschaftsbeschreibung zurück
              * */
-            const std::vector<std::unique_ptr<SurfaceObject>>& GetSurface();
-            
-            /** Gibt das Kollisionsmodell der Raumschiffs zurück
-             * */
-            const ShipCollisionModel& GetShipCollisionModel();
+            const std::vector<std::unique_ptr<SurfaceObject>>& getSurface() const;
+
+            const sf::Drawable& getCollisionOverlay() const;
 
         private:
             /* Einige Konstanten für die Simulation */
@@ -116,6 +114,9 @@ namespace ExomoMarsLander
             std::vector<std::unique_ptr<SurfaceObject>> planetSurface;
 
             ShipCollisionModel shipCollisionModel;
+
+            sf::RenderTexture collisionRenderTexture;
+            sf::RectangleShape collisionOverlay;
 
             /* Eingaben aus dem Spiel */
 

@@ -16,8 +16,8 @@ namespace ExomoMarsLander
         public:
             Spaceship();
 
-            /** Initialisiere das Raumschiff mit Kollisionsmodell und Transformation */
-            void initialize(const ShipCollisionModel& collisionModel, CoordinateTransformation transformation);
+            /** Initialisiere das Raumschiff */
+            void initialize();
 
             /** Setze Position des Raumschiffs */
             void setPosition(double x, double y);
@@ -30,15 +30,11 @@ namespace ExomoMarsLander
 
             /** Zeichne das Raumschiff auf das Zeichenfenster */
             void drawTo(sf::RenderTarget& target);
-
-            /** Zeige das Kollisionsmodell an */
-            void showCollisionModel(bool show); 
             
         private:
             sf::CircleShape nose;
             sf::CircleShape body;
             sf::CircleShape flame;
-            std::vector<std::unique_ptr<sf::Shape>> collisionShapes;
 
 
             bool flameOn;
@@ -46,10 +42,6 @@ namespace ExomoMarsLander
             float posX;
             float posY;
             float rot;
-
-            bool collisionModelVisible;
-            
-            void drawCollisionModelTo(sf::RenderTarget& target);
     };
 }
 

@@ -32,12 +32,11 @@ void GameActive::InitializeLevel()
     transformation = CoordinateTransformation(800, 600, 4000000, 3000000);
 
     // Initialisiere Raumschiff und Landschaft
-    surface.Initialize(sim.GetSurface(), transformation);
-    ship.initialize(sim.GetShipCollisionModel(), transformation);
+    surface.Initialize(sim.getSurface(), transformation);
+    ship.initialize();
 
     // Zeige Kollisionsmodelle an, nur für debugging
-    ship.showCollisionModel(true);
-    surface.showCollisionModel(true);
+    showCollisionModel = true;
 }
 
 void GameActive::handleEvent(const sf::Event& event)
@@ -155,6 +154,11 @@ void GameActive::render(sf::RenderWindow& window)
 
     surface.drawTo(window);
     ship.drawTo(window);
+
+    if(showCollisionModel)
+    {
+        window.draw(sim.getCollisionOverlay());
+    }
 
     sf::Text scoreText;
 
