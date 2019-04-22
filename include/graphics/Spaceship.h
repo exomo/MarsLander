@@ -1,6 +1,7 @@
 #ifndef SPACESHIP_H
 #define SPACESHIP_H
 
+#include <GlobalResources.h>
 #include <graphics/CoordinateTransformation.h>
 #include <simulation/ShipCollisionModel.h>
 
@@ -32,10 +33,11 @@ namespace ExomoMarsLander
             void drawTo(sf::RenderTarget& target);
             
         private:
-            sf::CircleShape nose;
-            sf::CircleShape body;
-            sf::CircleShape flame;
+            /* Referenz auf den Resourcen Manager */
+            const GlobalResources& globalResources;
 
+            sf::CircleShape flame;
+            sf::Sprite bodySprite;
 
             bool flameOn;
 

@@ -16,10 +16,12 @@ namespace ExomoMarsLander
             ShipCollisionModel();
 
             sf::FloatRect getBoundingRect(float posX, float posY, float rot) const;
-            std::vector<std::unique_ptr<sf::Shape>> getDisplayShapes(CoordinateTransformation transformation) const;
+            const sf::Sprite& getCollisionSprite(float posX, float posY, float rot, CoordinateTransformation transformation);
 
         private:
-            std::vector<std::unique_ptr<sf::Shape>> collisionShapes;
+            sf::Texture collisionTexture;
+            sf::Sprite collisionSprite;
+            sf::FloatRect boundingRect;
     };
 
 }

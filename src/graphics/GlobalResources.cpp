@@ -12,6 +12,13 @@ void GlobalResources::LoadResources()
     {
         throw resource_exception("./resources/Amaranth-Italic.otf");
     }
+
+    /* Grafiken laden */
+    if(!spaceshipTexture.loadFromFile("./resources/spaceship.png"))
+    {
+        throw resource_exception("./resources/spaceship.png");
+    }
+    spaceshipTexture.setSmooth(true);
 }
 
 const sf::Font& GlobalResources::GetFont() const
@@ -19,3 +26,8 @@ const sf::Font& GlobalResources::GetFont() const
     return textFont;
 }
 
+
+const sf::Texture& GlobalResources::GetSpaceship() const
+{
+    return spaceshipTexture;
+}

@@ -1,3 +1,4 @@
+#include <GlobalResources.h>
 #include <simulation/ShipCollisionModel.h>
 #include <simulation/SurfaceObject.h>
 
@@ -8,62 +9,43 @@ using namespace ExomoMarsLander;
 
 ShipCollisionModel::ShipCollisionModel()
 {
-    auto base = std::make_unique<sf::ConvexShape>();
-    base->setPointCount(3);
-    base->setPoint(0, sf::Vector2f(-100000, 0));
-    base->setPoint(1, sf::Vector2f(0, 200000));
-    base->setPoint(2, sf::Vector2f(100000, 0));
-    collisionShapes.push_back(std::move(base));
-    
-    auto base3 = std::make_unique<sf::CircleShape>(100000);
-    base3->setOrigin(100000, 100000);
-    collisionShapes.push_back(std::move(base3));
+    // Kopiere die Raumschiff Textur in ein lokales Bild, um daraus das Kollisionsmodell zu berechnen
+    auto& glob  = GlobalResources::GetInstance();
+    auto shipImage = glob.GetSpaceship().copyToImage();
+    auto imageSize = shipImage.getSize();
+
+    for(int x=0; x<imageSize.x;++x)
+    {
+        for(int y=0; y<imageSize.y;++y)
+        {
+            // Alle Pixel, die nicht komplett transparent sind werden für die Kollisionserkennung blau (mit halber Transparenz) gemacht
+            if(shipImage.getPixel(x,y) != sf::Color::Transparent)
+            {
+                shipImage.setPixel(x,y, sf::Color(0, 0, 255, 130));
+            }
+        }
+    }
+
+    collisionTexture.loadFromImage(shipImage);
+
+    collisionSprite.setTexture(collisionTexture, true);
+    collisionSprite.setScale(0.5, 0.5);
+    collisionSprite.setOrigin(imageSize.x / 2, imageSize.y / 2);
+
+    // Die bounding Box ist vereinfacht die Größe des Sprites, transformiert ins Simulations-Koordinatensystem
+    // TODO: korrekte Transformation an sinnvoller Stelle berücksichtigen, Faktor 5000 könnte sich ändern
+    boundingRect = sf::FloatRect(- (static_cast<float>(imageSize.x) / 2) * 5000, - (static_cast<float>(imageSize.y) / 2) * 5000, static_cast<float>(imageSize.x) * 5000, static_cast<float>(imageSize.y) * 5000);
 }
 
 sf::FloatRect ShipCollisionModel::getBoundingRect(float posX, float posY, float rot) const
 {
-    sf::FloatRect bounding(0,0,0,0);
-
-    // TODO: do as much as possible in initialization
-
-    // Mit 0 initialisieren ist hier ok weil das Raumschiff immer um den 0-Punkt herumk sein muss
-    float leftMost = 0;
-    float rightMost = 0;
-    float topMost = 0;
-    float bottomMost = 0;
-
-    for(const auto& shape : collisionShapes)
-    {
-        for(int i = 0; i<shape->getPointCount(); ++i)
-        {
-            auto x = shape->getPoint(i).x;
-            auto y = shape->getPoint(i).y;
-            if(x < leftMost) leftMost = x;
-            if(x > rightMost) rightMost = x;
-            if(y > topMost) topMost = y;
-            if(y < bottomMost) bottomMost = y;
-        }
-    }
-
-    return sf::Transform().rotate(rot / 57).translate(posX, posY).transformRect(bounding);
+    auto transformed = sf::Transform().translate(posX, posY).transformRect(boundingRect);
+    return transformed;
 }
 
-std::vector<std::unique_ptr<sf::Shape>> ShipCollisionModel::getDisplayShapes(CoordinateTransformation transformation) const
+const sf::Sprite& ShipCollisionModel::getCollisionSprite(float posX, float posY, float rot, CoordinateTransformation transformation)
 {
-    std::vector<std::unique_ptr<sf::Shape>> displayShapes;
-
-    for(const auto& shape : collisionShapes)
-    {
-        auto displayShape = std::make_unique<sf::ConvexShape>();
-        displayShape->setPointCount(shape->getPointCount());
-        for(int i=0; i<shape->getPointCount(); ++i)
-        {
-            displayShape->setPoint(i, transformation.transformPoint2(shape->getPoint(i)));
-        }
-
-        displayShape->setOrigin(transformation.transformPoint2(shape->getOrigin()));
-        displayShapes.push_back(std::move(displayShape));
-    }
-    
-    return displayShapes;
+    collisionSprite.setPosition(transformation.transformPoint2(sf::Vector2f(posX, posY)));
+    collisionSprite.setRotation(transformation.ToDisplayAngle(rot));
+    return collisionSprite;
 }

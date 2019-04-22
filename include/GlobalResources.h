@@ -32,6 +32,8 @@ namespace ExomoMarsLander
 
             /* Zugriffsmethoden für die einzelnen Resourcen. */
             const sf::Font& GetFont() const;
+            const sf::Texture& GetSpaceship() const;
+
 
             /* Einfache Singleton-Implementierung, mit der immer auf die selbe statische Instanz zugegriffen wird. */
             static GlobalResources& GetInstance()
@@ -50,6 +52,8 @@ namespace ExomoMarsLander
 
             /* Die eigentlichen Ressourcen. */
             sf::Font textFont;
+
+            sf::Texture spaceshipTexture;
     };
 
 }

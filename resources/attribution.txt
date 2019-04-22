@@ -14,3 +14,8 @@ Font by:
  This Font Software is licensed under the SIL Open Font License, Version 1.1.
  A copy of this license is available in OFL.txt, and is also available with a FAQ at: http://scripts.sil.org/OFL
  
+Spaceship model by:
+ Author: dravenx
+ Licence: CC BY-SA 3.0
+ Source: https://opengameart.org/content/ufos-and-spaceship
+ 

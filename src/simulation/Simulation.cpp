@@ -2,6 +2,7 @@
 #include <simulation/Simulation.h>
 
 #include <cmath>
+#include <iostream>
 #include <memory>
 
 using namespace ExomoMarsLander;
@@ -12,6 +13,7 @@ void SpaceSimulation::Initialize()
     posY = 2000000;
     rotation = 0;
 
+    // velocityX = 0;
     velocityX = 500;
     velocityY = 0;
     velocityRot = 0;
@@ -21,12 +23,11 @@ void SpaceSimulation::Initialize()
     hasCrashed = false;
     hasLanded = false;
 
-    
-    collisionOverlay = sf::RectangleShape(sf::Vector2f(400, 300));
-    collisionOverlay.setScale(2.0, 2.0);
     collisionRenderTexture.create(400, 300);
     collisionRenderTexture.clear(sf::Color::Magenta);
     collisionRenderTexture.display();
+    collisionOverlay = sf::RectangleShape(sf::Vector2f(400, 300));
+    collisionOverlay.setScale(2.0, 2.0);
     collisionOverlay.setTexture(&collisionRenderTexture.getTexture());
 
     generateSurface();
@@ -112,7 +113,7 @@ bool SpaceSimulation::hasCollision()
     std::vector<const SurfaceObject*> objectsInRange;
 
     auto boundingRect = shipCollisionModel.getBoundingRect(posX, posY, rotation);
-
+    
     for(auto& surfaceObject : planetSurface)
     {
         if(surfaceObject->rightSide > boundingRect.left 
@@ -133,15 +134,13 @@ bool SpaceSimulation::hasCollision()
         collisionRenderTexture.draw(*shape);
     }
 
-    auto shipObjects = shipCollisionModel.getDisplayShapes(transformation);
+    const auto& shipObject = shipCollisionModel.getCollisionSprite(posX, posY, rotation, transformation);
+    collisionRenderTexture.draw(shipObject);
 
-    for(const auto& shipObject : shipObjects)
-    {
-        shipObject->setPosition(transformation.transformPoint2(sf::Vector2f(posX, posY)));
-        shipObject->setRotation(transformation.ToDisplayAngle(rotation));
-        shipObject->setFillColor(sf::Color(0, 0, 255, 100));
-        collisionRenderTexture.draw(*shipObject);
-    }
+    sf::RectangleShape boundingShape(transformation.transformPoint(sf::Vector2f(boundingRect.width, boundingRect.height)));
+    boundingShape.setPosition(transformation.transformPoint2(sf::Vector2f(boundingRect.left, boundingRect.top)));
+    boundingShape.setFillColor(sf::Color(0, 255, 0, 150));
+    collisionRenderTexture.draw(boundingShape);
 
     collisionRenderTexture.display();
 

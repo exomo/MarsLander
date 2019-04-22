@@ -12,6 +12,7 @@ using namespace ExomoMarsLander;
 GameActive::GameActive()
     : globalResources(GlobalResources::GetInstance())
     , textFont(globalResources.GetFont())
+    , showCollisionModel(false)
 {
     InitializeLevel();
 
@@ -26,17 +27,18 @@ GameActive::~GameActive()
 
 void GameActive::InitializeLevel()
 {
-    sim.Initialize();
 
     // TODO: Parameter sind im Moment fest, sollten von außen kommen
     transformation = CoordinateTransformation(800, 600, 4000000, 3000000);
+
+    sim.Initialize();
 
     // Initialisiere Raumschiff und Landschaft
     surface.Initialize(sim.getSurface(), transformation);
     ship.initialize();
 
     // Zeige Kollisionsmodelle an, nur für debugging
-    showCollisionModel = true;
+    showCollisionModel = false;
 }
 
 void GameActive::handleEvent(const sf::Event& event)
@@ -78,6 +80,10 @@ void GameActive::handleEvent(const sf::Event& event)
         if((event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::S))
         {
             // move ship down (maybe not possible)
+        }
+        if((event.key.code == sf::Keyboard::H))
+        {
+            showCollisionModel = !showCollisionModel;
         }
         break;
 
@@ -150,7 +156,7 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
 
 void GameActive::render(sf::RenderWindow& window)
 {
-    window.clear(sf::Color(25,50,0, 255));
+    window.clear(sf::Color(0,0,0, 255));
 
     surface.drawTo(window);
     ship.drawTo(window);
