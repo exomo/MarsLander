@@ -7,9 +7,9 @@
 #include <memory>
 #include <vector>
 
-/** 
+/**
  * The main game logic is within the simulation of the space ship
- *  
+ *
  */
 
 namespace ExomoMarsLander
@@ -17,7 +17,7 @@ namespace ExomoMarsLander
     class SpaceSimulation
     {
         public:
-            /** Mögliche Drehrichtungen des Raumschiffs 
+            /** Mögliche Drehrichtungen des Raumschiffs
              * */
             enum Rotation
             {
@@ -30,7 +30,7 @@ namespace ExomoMarsLander
              * */
             struct ShipState
             {
-                /** Hohe (in m) über dem Nullpunkt des Bodens 
+                /** Hohe (in m) über dem Nullpunkt des Bodens
                  * */
                 double altitude;
 
@@ -38,9 +38,9 @@ namespace ExomoMarsLander
                  * */
                 double horizontalPosition;
 
-                /** Lage/Drehung (in Bogenmaß, 0 = aufrecht) 
+                /** Lage/Drehung (in Bogenmaß, 0 = aufrecht)
                  * */
-                double rotation; 
+                double rotation;
 
                 /** Gibt an ob das Raumschiff noch ganz ist
                  * */
@@ -56,15 +56,15 @@ namespace ExomoMarsLander
              * */
             void Initialize();
 
-            /** Schub des Haupttriebwerks ein- oder ausschalten 
+            /** Schub des Haupttriebwerks ein- oder ausschalten
              * */
             void EnableThrust(bool enable);
 
-            /** Drehung festlegen 
+            /** Drehung festlegen
              * */
             void Rotate(Rotation rot);
 
-            /** Mache einen Schritt in der Simulation 
+            /** Mache einen Schritt in der Simulation
              *
              *  Ein Zeitschritt berechnet die Bewegung aller Objekte in der vergangenen Zeit
              * */
@@ -86,6 +86,7 @@ namespace ExomoMarsLander
             const double thrust  = 3;   // thrust constant
             //const double airResistance = 0.0000001; // air resistance constant
             const double airResistance = 0; // air resistance constant
+            const double rotationSpeed = 0.005; // Drehgeschwindigkeit
 
             /* Bewegungsstatus des Schiffs */
 

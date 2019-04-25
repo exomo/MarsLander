@@ -5,6 +5,7 @@
 #include <graphics/CoordinateTransformation.h>
 #include <simulation/ShipCollisionModel.h>
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
 namespace ExomoMarsLander
@@ -31,13 +32,14 @@ namespace ExomoMarsLander
 
             /** Zeichne das Raumschiff auf das Zeichenfenster */
             void drawTo(sf::RenderTarget& target);
-            
+
         private:
             /* Referenz auf den Resourcen Manager */
             const GlobalResources& globalResources;
 
             sf::CircleShape flame;
             sf::Sprite bodySprite;
+            sf::Sound engineSound;
 
             bool flameOn;
 

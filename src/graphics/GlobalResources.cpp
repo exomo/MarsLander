@@ -19,6 +19,13 @@ void GlobalResources::LoadResources()
         throw resource_exception("./resources/spaceship.png");
     }
     spaceshipTexture.setSmooth(true);
+
+    /* Sound laden */
+    if(!engineSound.loadFromFile("./resources/engine_takeoff.wav"))
+    {
+        throw resource_exception("./resources/engine_takeoff.wav");
+    }
+
 }
 
 const sf::Font& GlobalResources::GetFont() const
@@ -30,4 +37,9 @@ const sf::Font& GlobalResources::GetFont() const
 const sf::Texture& GlobalResources::GetSpaceship() const
 {
     return spaceshipTexture;
+}
+
+const sf::SoundBuffer& GlobalResources::GetEngineSound() const
+{
+    return engineSound;
 }

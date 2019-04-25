@@ -7,12 +7,15 @@
 using namespace ExomoMarsLander;
 
 Spaceship::Spaceship()
-    : globalResources(GlobalResources::GetInstance()) 
+    : globalResources(GlobalResources::GetInstance())
     , flame(8,3), flameOn(false)
 {
 
     bodySprite.setTexture(globalResources.GetSpaceship(), true);
     bodySprite.setOrigin(bodySprite.getLocalBounds().width / 2, bodySprite.getLocalBounds().height / 2);
+
+    engineSound.setBuffer(globalResources.GetEngineSound());
+    engineSound.setLoop(true);
 
     flame.setFillColor(sf::Color(250, 250, 50));
     flame.setOrigin(8,36);
@@ -40,6 +43,14 @@ void Spaceship::drawTo(sf::RenderTarget& target)
 
 void Spaceship::enableFlame(bool enable)
 {
+    if(!flameOn && enable)
+    {
+        engineSound.play();
+    }
+    if(flameOn && !enable)
+    {
+        engineSound.stop();
+    }
     flameOn = enable;
 }
 

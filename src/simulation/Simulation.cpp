@@ -1,9 +1,11 @@
 #include <graphics/CoordinateTransformation.h>
 #include <simulation/Simulation.h>
 
+#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <memory>
+#include <random>
 
 using namespace ExomoMarsLander;
 
@@ -64,7 +66,7 @@ void SpaceSimulation::SimulationStep(double elapsedTime)
         {
             hasLanded = true;
         }
-        
+
         posY = 0;
         velocityY = 0;
     }
@@ -86,7 +88,7 @@ void SpaceSimulation::updateShip(double elapsedTime)
     {
         air = -(velocityY * velocityY * airResistance);
     }
-    
+
     velocityX = velocityX - (air * elapsedTime);
     velocityY = velocityY - (gravity * 0.5 * elapsedTime) - (air * elapsedTime);
 
@@ -99,11 +101,11 @@ void SpaceSimulation::updateShip(double elapsedTime)
     /* Neue Drehungen berechnen */
     if(rotationMode == Rotation::CounterClockwise)
     {
-        rotation -= 0.009 * elapsedTime;
+        rotation -= rotationSpeed * elapsedTime;
     }
     else if(rotationMode == Rotation::Clockwise)
     {
-        rotation += 0.009 * elapsedTime;
+        rotation += rotationSpeed * elapsedTime;
     }
 }
 
@@ -113,10 +115,10 @@ bool SpaceSimulation::hasCollision()
     std::vector<const SurfaceObject*> objectsInRange;
 
     auto boundingRect = shipCollisionModel.getBoundingRect(posX, posY, rotation);
-    
+
     for(auto& surfaceObject : planetSurface)
     {
-        if(surfaceObject->rightSide > boundingRect.left 
+        if(surfaceObject->rightSide > boundingRect.left
              && surfaceObject->leftSide < (boundingRect.left + boundingRect.width))
         {
             objectsInRange.push_back(surfaceObject.get());
@@ -150,7 +152,7 @@ bool SpaceSimulation::hasCollision()
     for(int y=0;y<300;++y)
     {
         auto p = img.getPixel(x,y);
-        if(p.a != 0 && p.b > 0 && p.r > 0) 
+        if(p.a != 0 && p.b > 0 && p.r > 0)
         {
             return true;
         }
@@ -171,29 +173,65 @@ SpaceSimulation::ShipState SpaceSimulation::GetShipState()
 
 void SpaceSimulation::generateSurface()
 {
+    const int maxAltitude = 1000000;
+    const int minLandingAltitude = 10000;
+    const int maxLandingAltitude = 500000;
+    const int landingZoneWidth = 600000;
+    const double leftBorder = -2000000;
+    const double rightBorder = 2000000;
 
-    auto leftSlope = std::make_unique<SurfaceSlope>();
-    leftSlope->leftSide = -2000000;
-    leftSlope->rightSide = -1000000;
-    leftSlope->leftAltitude = 1000000;
-    leftSlope->rightAltitude = 20000;
-    leftSlope->allowLanding = true;
-    planetSurface.push_back(std::move(leftSlope));
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    // std::random_device rd;
+    std::mt19937 mt(seed);
 
+
+    // Generiere zufällige Landefläche
+    std::uniform_real_distribution<double> landingAltitudeDist(minLandingAltitude, maxLandingAltitude);
+    std::uniform_real_distribution<double> landingPositionDist(leftBorder + landingZoneWidth, rightBorder - landingZoneWidth - landingZoneWidth);
     auto landingZone = std::make_unique<SurfaceFlat>();
-    landingZone->leftSide = -1000000;
-    landingZone->rightSide = 1000000;
-    landingZone->altitude = 20000;
+    landingZone->leftSide = landingPositionDist(mt);
+    landingZone->rightSide = landingZone->leftSide + landingZoneWidth;
+    landingZone->altitude = landingAltitudeDist(mt);
     landingZone->allowLanding = true;
+
+    auto leftPosition = landingZone->leftSide;
+    auto leftPositionAltitude = landingZone->altitude;
+    auto rightPosition = landingZone->rightSide;
+    auto rightPositionAltitude = landingZone->altitude;
+
     planetSurface.push_back(std::move(landingZone));
 
-    auto rightSlope = std::make_unique<SurfaceSlope>();
-    rightSlope->leftSide = 1000000;
-    rightSlope->rightSide = 2000000;
-    rightSlope->leftAltitude = 20000;
-    rightSlope->rightAltitude = 2000000;
-    rightSlope->allowLanding = true;
-    planetSurface.push_back(std::move(rightSlope));
+    std::uniform_real_distribution<double> widthDist(landingZoneWidth / 4, landingZoneWidth * 1.5);
+    std::uniform_real_distribution<double> altitudeDist(minLandingAltitude, maxAltitude);
+
+    // Generiere Landschaft links der Landezone
+    while(leftPosition > leftBorder)
+    {
+        auto leftSlope = std::make_unique<SurfaceSlope>();
+
+        leftSlope->leftSide = leftPosition - widthDist(mt);
+        leftSlope->rightSide = leftPosition;
+        leftSlope->leftAltitude = altitudeDist(mt);
+        leftSlope->rightAltitude = leftPositionAltitude;
+        leftSlope->allowLanding = false;
+        leftPosition = leftSlope->leftSide;
+        leftPositionAltitude = leftSlope->leftAltitude;
+        planetSurface.push_back(std::move(leftSlope));
+    }
+
+    // Generiere Landschaft rechts der Landezone
+    while(rightPosition < rightBorder)
+    {
+        auto rightSlope = std::make_unique<SurfaceSlope>();
+        rightSlope->leftSide = rightPosition; leftPosition;
+        rightSlope->rightSide = rightPosition + widthDist(mt);
+        rightSlope->leftAltitude = rightPositionAltitude;;
+        rightSlope->rightAltitude = altitudeDist(mt);
+        rightSlope->allowLanding = false;
+        rightPosition = rightSlope->rightSide;
+        rightPositionAltitude = rightSlope->rightAltitude;
+        planetSurface.push_back(std::move(rightSlope));
+    }
 }
 
 const sf::Drawable& SpaceSimulation::getCollisionOverlay() const
