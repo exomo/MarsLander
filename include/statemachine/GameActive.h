@@ -46,9 +46,12 @@ namespace ExomoMarsLander
         /* Resourcen für Grafik und Text */
         const sf::Font& textFont;
 
+        sf::RectangleShape background;
+        sf::RectangleShape planet;
+
         bool pauseRequested = false;
         bool paused = true;
-        
+
         int score = 0;
         int levelScore = 0;
 

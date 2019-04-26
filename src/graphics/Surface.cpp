@@ -1,3 +1,4 @@
+#include <GlobalResources.h>
 #include <graphics/Surface.h>
 
 #include <iostream>
@@ -22,8 +23,9 @@ void Surface::drawTo(sf::RenderTarget& target)
 /** Initialisiere mit generierter Landschaft */
 void Surface::Initialize(const std::vector<std::unique_ptr<SurfaceObject>>& surfaceObjects, CoordinateTransformation transformation)
 {
-    
-        std::cout << "Surface objects:\n";
+
+    std::cout << "Surface objects:\n";
+    const auto& res = GlobalResources::GetInstance();
 
     for(const auto& obj : surfaceObjects)
     {
@@ -37,19 +39,15 @@ void Surface::Initialize(const std::vector<std::unique_ptr<SurfaceObject>>& surf
 
         auto shape = obj->getDisplayShape(transformation);
         shape->setFillColor(sf::Color(100, 250, 250, 255));
-        shape->setOutlineColor(sf::Color(200, 150, 50));
-        shape->setOutlineThickness(3);
+        // shape->setOutlineColor(sf::Color(200, 150, 50));
+        // shape->setOutlineThickness(0);
+        shape->setTexture(&res.GetSurface());
 
-        
-        std::cout << "- Shape:\n";
-        for(int i=0; i<shape->getPointCount(); ++i)
-        {
-            std::cout << "   (" << shape->getPoint(i).x << "-" << shape->getPoint(i).y << ")\n";
-        }
+        auto border = std::make_unique<sf::ConvexShape>(4);
+
+
 
         shapes.push_back(std::move(shape));
-
-
 
     }
 }
