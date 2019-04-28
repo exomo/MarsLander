@@ -33,6 +33,8 @@ namespace ExomoMarsLander
             /* Zugriffsmethoden für die einzelnen Resourcen. */
             const sf::Font& GetFont() const;
             const sf::Texture& GetSpaceship() const;
+            const sf::Texture& GetSurface() const;
+            const sf::Texture& GetFlame() const;
             const sf::SoundBuffer& GetEngineSound() const;
 
 
@@ -55,6 +57,8 @@ namespace ExomoMarsLander
             sf::Font textFont;
 
             sf::Texture spaceshipTexture;
+            sf::Texture surfaceTexture;
+            sf::Texture flameTexture;
 
             sf::SoundBuffer engineSound;
     };

@@ -1,4 +1,6 @@
+#include <chrono>
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <string>
 
@@ -8,7 +10,7 @@ using namespace ExomoMarsLander;
 
 Spaceship::Spaceship()
     : globalResources(GlobalResources::GetInstance())
-    , flame(8,3), flameOn(false)
+    , flameOn(false)
 {
 
     bodySprite.setTexture(globalResources.GetSpaceship(), true);
@@ -17,28 +19,37 @@ Spaceship::Spaceship()
     engineSound.setBuffer(globalResources.GetEngineSound());
     engineSound.setLoop(true);
 
-    flame.setFillColor(sf::Color(250, 250, 50));
-    flame.setOrigin(8,36);
-    flame.setRotation(180);
+
+    flameSprite.setTexture(globalResources.GetFlame());
+    flameSprite.setOrigin(16,0);
 }
 
 
 void Spaceship::setPosition(double x, double y)
 {
     bodySprite.setPosition(x,y);
-    flame.setPosition(x, y);
+    flameSprite.setPosition(x, y);
 }
 
 void Spaceship::setRotation(double r)
 {
     bodySprite.setRotation(r);
-    flame.setRotation(r + 180);
+    flameSprite.setRotation(r);
 }
 
 void Spaceship::drawTo(sf::RenderTarget& target)
 {
+    if(flameOn) 
+    {
+        // durch eine zufällige Skalierung wird ein Flacker-Effekt der Flamme erzeugt
+        std::uniform_real_distribution<float> scaleDist(0.9, 1.0);
+        auto scale = scaleDist(mt);
+
+        flameSprite.setScale(scale, scale);
+        target.draw(flameSprite);
+    }
+
     target.draw(bodySprite);
-    if(flameOn) target.draw(flame);
 }
 
 void Spaceship::enableFlame(bool enable)

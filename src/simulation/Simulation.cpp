@@ -189,9 +189,7 @@ void SpaceSimulation::generateSurface()
     const double rightBorder = 2000000;
 
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    // std::random_device rd;
     std::mt19937 mt(seed);
-
 
     // Generiere zufällige Landefläche
     std::uniform_real_distribution<double> landingAltitudeDist(minLandingAltitude, maxLandingAltitude);
