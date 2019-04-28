@@ -1,10 +1,12 @@
 #ifndef GAMEACTIVE_H
 #define GAMEACTIVE_H
 
-#include <graphics/CoordinateTransformation.h>
 #include <statemachine/GameState.h>
 #include <GlobalResources.h>
 #include <simulation/Simulation.h>
+
+#include <graphics/CoordinateTransformation.h>
+#include <graphics/Hud.h>
 #include <graphics/Spaceship.h>
 #include <graphics/Surface.h>
 
@@ -42,6 +44,11 @@ namespace ExomoMarsLander
         Surface surface;
         SpaceSimulation sim;
         CoordinateTransformation transformation;
+        Hud hud;
+
+        bool forwardPushed = false;
+        bool rotateClockwisePushed = false;
+        bool rotateCounterClockwisePushed = false;
 
         /* Resourcen für Grafik und Text */
         const sf::Font& textFont;

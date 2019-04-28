@@ -22,6 +22,7 @@ void SpaceSimulation::Initialize()
 
     thrustActive = false;
     rotationMode = Rotation::None;
+    fuel = fuelTankSize;
     hasCrashed = false;
     hasLanded = false;
 
@@ -92,20 +93,27 @@ void SpaceSimulation::updateShip(double elapsedTime)
     velocityX = velocityX - (air * elapsedTime);
     velocityY = velocityY - (gravity * 0.5 * elapsedTime) - (air * elapsedTime);
 
-    if(thrustActive)
+    if(thrustActive && fuel > 0)
     {
         velocityY = velocityY + thrust * elapsedTime * cos(rotation);
         velocityX = velocityX + thrust * elapsedTime * sin(rotation);
+
+        fuel = std::max(fuel - (fuelConsumption * elapsedTime), 0.0);
     }
 
     /* Neue Drehungen berechnen */
-    if(rotationMode == Rotation::CounterClockwise)
+    if(fuel > 0)
     {
-        rotation -= rotationSpeed * elapsedTime;
-    }
-    else if(rotationMode == Rotation::Clockwise)
-    {
-        rotation += rotationSpeed * elapsedTime;
+        if(rotationMode == Rotation::CounterClockwise)
+        {
+            rotation -= rotationSpeed * elapsedTime;
+            fuel = std::max(fuel - (rotationFuelConsumption * elapsedTime), 0.0);
+        }
+        else if(rotationMode == Rotation::Clockwise)
+        {
+            rotation += rotationSpeed * elapsedTime;
+            fuel = std::max(fuel - (rotationFuelConsumption * elapsedTime), 0.0);
+        }
     }
 }
 
@@ -168,7 +176,7 @@ bool SpaceSimulation::hasCollision()
 
 SpaceSimulation::ShipState SpaceSimulation::GetShipState()
 {
-    return ShipState {posY, posX, rotation, !hasCrashed, hasLanded};
+    return ShipState {posY, posX, rotation, (fuel * 100 / fuelTankSize), !hasCrashed, hasLanded};
 }
 
 void SpaceSimulation::generateSurface()

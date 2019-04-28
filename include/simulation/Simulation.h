@@ -42,6 +42,11 @@ namespace ExomoMarsLander
                  * */
                 double rotation;
 
+                /** Übriger Treibstoff im Tank 
+                 *  Werte 0 (leer) bis 100 (voll)
+                 * */
+                double fuel;
+
                 /** Gibt an ob das Raumschiff noch ganz ist
                  * */
                 bool isAlive;
@@ -87,6 +92,9 @@ namespace ExomoMarsLander
             //const double airResistance = 0.0000001; // air resistance constant
             const double airResistance = 0; // air resistance constant
             const double rotationSpeed = 0.005; // Drehgeschwindigkeit
+            const double fuelConsumption = 0.003; // Treibstoffverbrauch
+            const double rotationFuelConsumption = 0.001; // Treibstoffverbrauch
+            const double fuelTankSize = 10; // Größe des Treibstofftanks
 
             /* Bewegungsstatus des Schiffs */
 
@@ -110,6 +118,9 @@ namespace ExomoMarsLander
 
             bool hasCrashed = false;
             bool hasLanded = false;
+
+            /** Treibstoffreserven */
+            double fuel;
 
             /** Landschaft,  */
             std::vector<std::unique_ptr<SurfaceObject>> planetSurface;

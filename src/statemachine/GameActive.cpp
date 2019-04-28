@@ -27,7 +27,7 @@ GameActive::~GameActive()
 
 void GameActive::InitializeLevel()
 {
-
+    
     // TODO: Parameter sind im Moment fest, sollten von außen kommen
     transformation = CoordinateTransformation(800, 600, 4000000, 3000000);
 
@@ -37,8 +37,14 @@ void GameActive::InitializeLevel()
     surface.Initialize(sim.getSurface(), transformation);
     ship.initialize();
 
+    hud.initialize();
+
     // Zeige Kollisionsmodelle an, nur für debugging
     showCollisionModel = false;
+
+    forwardPushed = false;
+    rotateClockwisePushed = false;
+    rotateCounterClockwisePushed = false;
 }
 
 void GameActive::handleEvent(const sf::Event& event)
@@ -60,26 +66,20 @@ void GameActive::handleEvent(const sf::Event& event)
             pauseRequested = true;
         }
 
-        //TODO: Bewegunstasten sinnvoller auswerten.
         if((event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::A))
         {
             // Schiff gegen den Uhrzeigersinn drehen
-            sim.Rotate(SpaceSimulation::Rotation::CounterClockwise);
+            rotateCounterClockwisePushed = true;
         }
         if((event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::D))
         {
-            // move ship to the right
-            sim.Rotate(SpaceSimulation::Rotation::Clockwise);
+            // Schiff im Uhrzeigersinn drehen
+            rotateClockwisePushed = true;
         }
         if((event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::W))
         {
-            // move ship up
-            sim.EnableThrust(true);
-            ship.enableFlame(true);
-        }
-        if((event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::S))
-        {
-            // move ship down (maybe not possible)
+            // Schiff nach vorne/oben bewegen
+            forwardPushed = true;
         }
         if((event.key.code == sf::Keyboard::H))
         {
@@ -90,18 +90,17 @@ void GameActive::handleEvent(const sf::Event& event)
     case sf::Event::KeyReleased:
         if((event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::W))
         {
-            sim.EnableThrust(false);
-            ship.enableFlame(false);
+            forwardPushed = false;
         }
         if((event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::A))
         {
             // Schiff nicht mehr drehen
-            sim.Rotate(SpaceSimulation::Rotation::None);
+            rotateCounterClockwisePushed = false;
         }
         if((event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::D))
         {
             // Schiff nicht mehr drehen
-            sim.Rotate(SpaceSimulation::Rotation::None);
+            rotateClockwisePushed = false;
         }
         break;
 
@@ -128,12 +127,30 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
     {
         paused = false;
         lastMoveTime = elapsed;
+        
+        forwardPushed = false;
+        rotateClockwisePushed = false;
+        rotateCounterClockwisePushed = false;
     }
 
     auto elapsedSinceMove = (elapsed - lastMoveTime).asMilliseconds();
     sim.SimulationStep(elapsedSinceMove);
 
     lastMoveTime = elapsed;
+
+    if((rotateClockwisePushed && rotateCounterClockwisePushed) || (!rotateClockwisePushed && !rotateCounterClockwisePushed))
+    {
+        sim.Rotate(SpaceSimulation::Rotation::None);
+    } 
+    else if(rotateClockwisePushed)
+    {
+        sim.Rotate(SpaceSimulation::Rotation::Clockwise);
+    }
+    else if(rotateCounterClockwisePushed)
+    {
+        sim.Rotate(SpaceSimulation::Rotation::CounterClockwise);
+    }
+    sim.EnableThrust(forwardPushed);
 
     auto shipState = sim.GetShipState();
 
@@ -150,6 +167,10 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
     // Simulationskoordinaten in Anzeigekoordinaten umrechnen
     ship.setPosition(transformation.ToDisplayX(shipState.horizontalPosition), transformation.ToDisplayY(shipState.altitude));
     ship.setRotation(transformation.ToDisplayAngle(shipState.rotation));
+    ship.enableFlame(shipState.fuel > 0 && forwardPushed);
+
+    hud.setFuel(shipState.fuel);
+    hud.setAltitude(shipState.altitude);
 
     return nullptr;
 }
@@ -166,14 +187,5 @@ void GameActive::render(sf::RenderWindow& window)
         window.draw(sim.getCollisionOverlay());
     }
 
-    sf::Text scoreText;
-
-    scoreText.setFont(textFont);
-    std::wostringstream text;
-    text << L"Völlig losgelöst von der Erde";
-    scoreText.setString(text.str());
-    scoreText.setCharacterSize(24);
-    scoreText.setFillColor(sf::Color::Blue);
-    scoreText.setPosition(15, 5);
-    window.draw(scoreText);
+    hud.drawTo(window);
 }

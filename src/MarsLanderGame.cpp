@@ -13,7 +13,7 @@ MarsLanderGame::MarsLanderGame()
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     window.create(sf::VideoMode(800, 600), "~~~ Exomo MarsLander ~~~", sf::Style::Default, settings);
-    // window.create(sf::VideoMode::getDesktopMode(), "~~~ Exomo MarsLander ~~~", sf::Style::Fullscreen);
+    // window.create(sf::VideoMode::getDesktopMode(), "~~~ Exomo MarsLander ~~~", sf::Style::Fullscreen, settings);
 
     /* Für jeden Tastendruck soll nur ein Event erzeugt werden, wenn die Taste gedrückt bleibt werden keine wiederholten "KeyDown" events erzeugt. */
     window.setKeyRepeatEnabled(true);
