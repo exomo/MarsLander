@@ -36,6 +36,7 @@ namespace ExomoMarsLander
             const sf::Texture& GetSpace() const;
             const sf::Texture& GetPlanet() const;
             const sf::Texture& GetSurface() const;
+            const sf::Texture& GetFlame() const;
             const sf::SoundBuffer& GetEngineSound() const;
 
 
@@ -61,6 +62,7 @@ namespace ExomoMarsLander
             sf::Texture spaceTexture;
             sf::Texture planetTexture;
             sf::Texture surfaceTexture;
+            sf::Texture flameTexture;
 
             sf::SoundBuffer engineSound;
     };

@@ -8,6 +8,8 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
+#include <random>
+
 namespace ExomoMarsLander
 {
     /**
@@ -37,8 +39,11 @@ namespace ExomoMarsLander
             /* Referenz auf den Resourcen Manager */
             const GlobalResources& globalResources;
 
-            sf::CircleShape flame;
+            /* Engine für Zufallszahlen, seed ist immer gleich, ist aber egal da das nur für Animation verwendet wird */
+            std::mt19937 mt = std::mt19937(0);
+
             sf::Sprite bodySprite;
+            sf::Sprite flameSprite;
             sf::Sound engineSound;
 
             bool flameOn;

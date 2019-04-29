@@ -23,6 +23,11 @@ void GlobalResources::LoadResources()
         throw resource_exception("./resources/spaceship.png");
     }
     spaceshipTexture.setSmooth(true);
+    if(!flameTexture.loadFromFile("./resources/flame.png"))
+    {
+        throw resource_exception("./resources/flame.png");
+    }
+    flameTexture.setSmooth(true);
     if(!planetTexture.loadFromFile("./resources/planet.png"))
     {
         throw resource_exception("./resources/planet.png");
@@ -30,6 +35,7 @@ void GlobalResources::LoadResources()
     planetTexture.setSmooth(true);
     if(!surfaceTexture.loadFromFile("./resources/surface.jpg"))
     {
+        throw resource_exception("./resources/mars_texture.png");
         throw resource_exception("./resources/surface.jpg");
     }
     surfaceTexture.setSmooth(true);
@@ -70,4 +76,9 @@ const sf::Texture& GlobalResources::GetSurface() const
 const sf::SoundBuffer& GlobalResources::GetEngineSound() const
 {
     return engineSound;
+}
+
+const sf::Texture& GlobalResources::GetFlame() const
+{
+    return flameTexture;
 }

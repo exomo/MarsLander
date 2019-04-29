@@ -27,6 +27,8 @@ namespace ExomoMarsLander
             
         private:
             std::vector<std::unique_ptr<sf::Shape>> shapes;
+
+            const sf::Texture& surfaceTexture;
     };
 }
 

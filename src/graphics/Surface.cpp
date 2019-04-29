@@ -9,6 +9,7 @@
 using namespace ExomoMarsLander;
 
 Surface::Surface()
+    : surfaceTexture(GlobalResources::GetInstance().GetSurface() )
 {
 }
 
@@ -20,34 +21,38 @@ void Surface::drawTo(sf::RenderTarget& target)
     }
 }
 
+std::unique_ptr<sf::Shape> copyShape(const sf::Shape& shape)
+{
+    auto newShape = std::make_unique<sf::ConvexShape>();
+    newShape->setPointCount(shape.getPointCount());
+    for(size_t i=0; i<shape.getPointCount(); ++i)
+    {
+        newShape->setPoint(i, shape.getPoint(i));
+    }
+    return std::move(newShape);
+}
+
 /** Initialisiere mit generierter Landschaft */
 void Surface::Initialize(const std::vector<std::unique_ptr<SurfaceObject>>& surfaceObjects, CoordinateTransformation transformation)
 {
-
-    std::cout << "Surface objects:\n";
-    const auto& res = GlobalResources::GetInstance();
-
     for(const auto& obj : surfaceObjects)
     {
-        // auto collisionRect = obj->getCollisionRect();
-        // // auto collisionShape = std::make_unique<sf::RectangleShape>(sf::Vector2f(transformation.ScaleToDisplayX(collisionRect.width), transformation.ScaleToDisplayY(collisionRect.height)));
-        // auto collisionShape = obj->getDisplayShape(transformation);
-        // collisionShape->setPosition(transformation.ToDisplayX(collisionRect.left), transformation.ToDisplayY(collisionRect.top));
-        // // collisionShape->setRotation(transformation.ToDisplayAngle(collisionRect))
-        // collisionShape->setFillColor(sf::Color(0,0,0,170));
-        // collisionShapes.push_back(std::move(collisionShape));
-
         auto shape = obj->getDisplayShape(transformation);
-        shape->setFillColor(sf::Color(100, 250, 250, 255));
-        // shape->setOutlineColor(sf::Color(200, 150, 50));
-        // shape->setOutlineThickness(0);
-        shape->setTexture(&res.GetSurface());
+        auto shape2 = copyShape(*shape);
 
-        auto border = std::make_unique<sf::ConvexShape>(4);
-
-
-
+        if(obj->allowLanding)
+        {
+            shape2->setFillColor(sf::Color(150, 250, 50));
+        }
+        else
+        {
+            shape2->setFillColor(sf::Color(250, 50, 50));
+        }
+        
+        shapes.push_back(std::move(shape2));
+  
+        shape->move(sf::Vector2f(0, 3.0));
+        shape->setTexture(&surfaceTexture);
         shapes.push_back(std::move(shape));
-
     }
 }
