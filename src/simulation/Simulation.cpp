@@ -119,10 +119,17 @@ void SpaceSimulation::updateShip(double elapsedTime)
 
 bool SpaceSimulation::hasCollision()
 {
+    auto boundingRect = shipCollisionModel.getBoundingRect(posX, posY, rotation);
+
+    // Seitlich aus dem Bildschirm gilt als Kollision
+    if(boundingRect.left + boundingRect.width < -2000000 || boundingRect.left > 2000000)
+    {
+        return true;
+    }
+
     // suche Kollisionsobjekte die in Frage kommen
     std::vector<const SurfaceObject*> objectsInRange;
 
-    auto boundingRect = shipCollisionModel.getBoundingRect(posX, posY, rotation);
 
     for(auto& surfaceObject : planetSurface)
     {
