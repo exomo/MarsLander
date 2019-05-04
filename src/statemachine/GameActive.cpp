@@ -183,7 +183,7 @@ GameStatePtr GameActive::updateGame(sf::Time elapsed, const std::shared_ptr<Game
 
 void GameActive::render(sf::RenderWindow& window)
 {
-    window.clear(sf::Color(0,0,0, 255));
+    window.clear(sf::Color::Black);
     window.draw(background);
     window.draw(planet);
 

@@ -19,11 +19,19 @@ namespace ExomoMarsLander
         public:
             /** Mögliche Drehrichtungen des Raumschiffs
              * */
-            enum Rotation
+            enum class Rotation
             {
                 None,
                 Clockwise,
                 CounterClockwise
+            };
+
+            enum class CollisionState
+            {
+                None,
+                LandingZone,
+                Surface,
+                Outside
             };
 
             /** Position des Raumschiffs in der simulierten Welt
@@ -142,7 +150,7 @@ namespace ExomoMarsLander
             void updateShip(double elapsedTime);
 
             /** Kollisionserkennung für Raumschiff und Welt */
-            bool hasCollision();
+            CollisionState checkCollision();
 
             /** Generiert eine zufällige Landschaft */
             void generateSurface();

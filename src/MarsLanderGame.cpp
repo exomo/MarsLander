@@ -8,7 +8,7 @@
 using namespace ExomoMarsLander;
 
 MarsLanderGame::MarsLanderGame()
-    : StateMachine(std::make_shared<GameMainMenu>())
+    : StateMachine(nullptr)
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -29,6 +29,8 @@ MarsLanderGame::MarsLanderGame()
     * Wenn eine Ressource nicht erfolgreich geladen wurde, wird eine exception geworfen die das Programm beendet.
     */
     GlobalResources::GetInstance().LoadResources();
+
+    currentState = std::make_shared<GameMainMenu>();
 }
 
 MarsLanderGame::~MarsLanderGame()

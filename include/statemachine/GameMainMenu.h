@@ -1,6 +1,7 @@
 #ifndef GAMEMAINMENU_H
 #define GAMEMAINMENU_H
 
+#include <graphics/Spaceship.h>
 #include <statemachine/GameState.h>
 
 namespace ExomoMarsLander
@@ -21,6 +22,14 @@ namespace ExomoMarsLander
     private:
         /* Resourcen für Grafik und Text */
         const sf::Font& textFont;
+        sf::RectangleShape backgroundShape;
+
+        Spaceship ship;
+
+        sf::Time lastUpdateTime;
+
+        double offsetX;
+        double offsetY;
 
         bool exitRequested = false;
         bool startRequested = false;

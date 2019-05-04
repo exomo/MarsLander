@@ -53,8 +53,16 @@ void SpaceSimulation::SimulationStep(double elapsedTime)
         return;
     }
     updateShip(elapsedTime);
-    if(hasCollision())
+    switch (checkCollision())
     {
+    case CollisionState::None:
+        break;
+
+    case CollisionState::Surface:
+        hasCrashed = true;
+        break;
+
+    case CollisionState::LandingZone:
         if(velocityY < -500)
         {
             hasCrashed = true;
@@ -67,9 +75,16 @@ void SpaceSimulation::SimulationStep(double elapsedTime)
         {
             hasLanded = true;
         }
-
         posY = 0;
         velocityY = 0;
+        break;
+
+    case CollisionState::Outside:
+        hasCrashed = true;
+        break;
+    
+    default:
+        break;
     }
 }
 
@@ -117,19 +132,18 @@ void SpaceSimulation::updateShip(double elapsedTime)
     }
 }
 
-bool SpaceSimulation::hasCollision()
+SpaceSimulation::CollisionState SpaceSimulation::checkCollision()
 {
     auto boundingRect = shipCollisionModel.getBoundingRect(posX, posY, rotation);
 
     // Seitlich aus dem Bildschirm gilt als Kollision
     if(boundingRect.left + boundingRect.width < -2000000 || boundingRect.left > 2000000)
     {
-        return true;
+        return CollisionState::Outside;
     }
 
     // suche Kollisionsobjekte die in Frage kommen
     std::vector<const SurfaceObject*> objectsInRange;
-
 
     for(auto& surfaceObject : planetSurface)
     {
@@ -147,38 +161,51 @@ bool SpaceSimulation::hasCollision()
     for(const auto* surfaceObject : objectsInRange)
     {
         auto shape = surfaceObject->getDisplayShape(transformation);
-        shape->setFillColor(sf::Color::Red);
+        if(surfaceObject->allowLanding)
+        {
+            shape->setFillColor(sf::Color::Green);
+        }
+        else
+        {
+            shape->setFillColor(sf::Color::Red);
+        }
+        
         collisionRenderTexture.draw(*shape);
     }
 
     const auto& shipObject = shipCollisionModel.getCollisionSprite(posX, posY, rotation, transformation);
     collisionRenderTexture.draw(shipObject);
 
-    sf::RectangleShape boundingShape(transformation.transformPoint(sf::Vector2f(boundingRect.width, boundingRect.height)));
-    boundingShape.setPosition(transformation.transformPoint2(sf::Vector2f(boundingRect.left, boundingRect.top)));
-    boundingShape.setFillColor(sf::Color(0, 255, 0, 150));
-    collisionRenderTexture.draw(boundingShape);
-
     collisionRenderTexture.display();
 
     auto img = collisionRenderTexture.getTexture().copyToImage();
 
+    bool landing = false;
     for(int x=0;x<400;++x)
     for(int y=0;y<300;++y)
     {
         auto p = img.getPixel(x,y);
         if(p.a != 0 && p.b > 0 && p.r > 0)
         {
-            return true;
+            return CollisionState::Surface;
+        }
+        if(p.a != 0 && p.b > 0 && p.g > 0)
+        {
+            landing = true;
         }
     }
 
+    if(landing)
+    {
+        return CollisionState::LandingZone;
+    }
 
     if(posY < 0)
     {
-        return true;
+        return CollisionState::Surface;
     }
-    return false;
+
+    return CollisionState::None;
 }
 
 SpaceSimulation::ShipState SpaceSimulation::GetShipState()

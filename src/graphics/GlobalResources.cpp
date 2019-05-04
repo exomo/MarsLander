@@ -18,6 +18,7 @@ void GlobalResources::LoadResources()
     {
         throw resource_exception("./resources/space.png");
     }
+    spaceTexture.setRepeated(true);
     if(!spaceshipTexture.loadFromFile("./resources/spaceship.png"))
     {
         throw resource_exception("./resources/spaceship.png");
